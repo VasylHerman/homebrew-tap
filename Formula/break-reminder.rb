@@ -13,7 +13,6 @@ class BreakReminder < Formula
     sha256 cellar: :any_skip_relocation, sequoia:       "d383062f36401a645d132c6e54506eb36d0403f636c3c0e966e472ab06f2c39d"
   end
 
-
   depends_on macos: :ventura
 
   def install
