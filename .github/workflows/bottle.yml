@@ -1,0 +1,94 @@
+name: Bottle
+
+# Builds bottles for a formula on GitHub's macOS runners, publishes them to a release on this tap
+# and writes the bottle block into the formula, so `brew install` downloads instead of compiling.
+# Run after the formula's url and sha256 have been bumped and pushed.
+
+on:
+  workflow_dispatch:
+    inputs:
+      formula:
+        description: Formula name
+        required: true
+        default: break-reminder
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-15]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up Homebrew
+        id: brew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Tap this repository
+        run: brew tap vasylherman/tap https://github.com/VasylHerman/homebrew-tap
+
+      - name: Build for bottling
+        run: brew install --build-bottle vasylherman/tap/${{ inputs.formula }}
+
+      - name: Bottle
+        run: |
+          version=$(brew info --json=v2 vasylherman/tap/${{ inputs.formula }} | python3 -c 'import sys,json; print(json.load(sys.stdin)["formulae"][0]["versions"]["stable"])')
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          mkdir bottles && cd bottles
+          brew bottle --json --no-rebuild \
+            --root-url "https://github.com/VasylHerman/homebrew-tap/releases/download/${{ inputs.formula }}-$version" \
+            vasylherman/tap/${{ inputs.formula }}
+          # Homebrew writes "name--version"; the release asset must be "name-version".
+          for f in *--*; do mv "$f" "${f/--/-}"; done
+          ls -la
+
+      - name: Upload bottle
+        uses: actions/upload-artifact@v4
+        with:
+          name: bottle-${{ matrix.os }}
+          path: bottles/*
+
+  publish:
+    needs: build
+    runs-on: macos-15
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Tap this repository
+        run: brew tap vasylherman/tap https://github.com/VasylHerman/homebrew-tap
+
+      - name: Download bottles
+        uses: actions/download-artifact@v4
+        with:
+          path: bottles
+          merge-multiple: true
+
+      - name: Version
+        run: |
+          version=$(brew info --json=v2 vasylherman/tap/${{ inputs.formula }} | python3 -c 'import sys,json; print(json.load(sys.stdin)["formulae"][0]["versions"]["stable"])')
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Publish bottles to a release on the tap
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ inputs.formula }}-$VERSION"
+          gh release view "$tag" --repo VasylHerman/homebrew-tap >/dev/null 2>&1 \
+            || gh release create "$tag" --repo VasylHerman/homebrew-tap --title "$tag bottles" --notes "Homebrew bottles for ${{ inputs.formula }} $VERSION."
+          gh release upload "$tag" --repo VasylHerman/homebrew-tap --clobber bottles/*.tar.gz
+
+      - name: Write the bottle block into the formula
+        run: |
+          cd "$(brew --repository vasylherman/tap)"
+          # The JSON still carries the "name--version" local filename; brew bottle --merge only needs the sha256 and tags.
+          brew bottle --merge --write --no-commit bottles/*.json 2>/dev/null || brew bottle --merge --write --no-commit "$GITHUB_WORKSPACE"/bottles/*.json
+          git diff --stat
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/${{ inputs.formula }}.rb
+          git commit -m "fix(formula): bottle ${{ inputs.formula }} $VERSION"
+          git push "https://x-access-token:${{ github.token }}@github.com/VasylHerman/homebrew-tap" HEAD:main

@@ -33,6 +33,10 @@ class BreakReminder < Formula
 
   def caveats
     <<~EOS
+      If the install failed with "Your Command Line Tools are too outdated", update them:
+        softwareupdate --all --install --force
+      or reinstall: sudo rm -rf /Library/Developer/CommandLineTools && xcode-select --install
+
       Launch it with:
         break-reminder
 
