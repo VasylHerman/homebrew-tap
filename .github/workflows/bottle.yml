@@ -20,7 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-15]
+        # Apple Silicon on 14 and 15 (serve newer macOS too), Intel on 15.
+        os: [macos-14, macos-15, macos-15-intel]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Homebrew
