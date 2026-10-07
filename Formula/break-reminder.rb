@@ -1,8 +1,8 @@
 class BreakReminder < Formula
   desc "Menu bar app that counts work and rest time and reminds you to take a break"
   homepage "https://github.com/VasylHerman/break-reminder"
-  url "https://github.com/VasylHerman/break-reminder/archive/refs/tags/v0.16.0.tar.gz"
-  sha256 "420592393cfbd8c3e4826032767e0062da6e6207148235f38d9d71fb5cbc4da8"
+  url "https://github.com/VasylHerman/break-reminder/archive/refs/tags/v0.17.0.tar.gz"
+  sha256 "17ef6c53001f993b8d3d216174b4cebcde6630dbb570baf2879707c770fcb71a"
   license "MIT"
   head "https://github.com/VasylHerman/break-reminder.git", branch: "main"
 
@@ -14,6 +14,7 @@ class BreakReminder < Formula
     app = prefix/"BreakReminder.app"
     (app/"Contents/MacOS").install ".build/release/BreakReminder"
     (app/"Contents").install "Support/Info.plist"
+    (app/"Contents/Resources").install "Support/Assets.car", "Support/AppIcon.icns"
     system "codesign", "--force", "--sign", "-", app
 
     (bin/"break-reminder").write <<~SH
