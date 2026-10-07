@@ -6,6 +6,13 @@ class BreakReminder < Formula
   license "MIT"
   head "https://github.com/VasylHerman/break-reminder.git", branch: "main"
 
+  bottle do
+    root_url "https://github.com/VasylHerman/homebrew-tap/releases/download/break-reminder-0.20.2"
+    sha256                               arm64_sequoia: "e8e5e2d741b0081dfa729eb47137c6b5e1954c2eacde3e5c7040f18f6cd19808"
+    sha256                               arm64_sonoma:  "5f59930c00c6b8886cff15735773cef601b3a4d0e39ce5fb61577c9c3e724efc"
+    sha256 cellar: :any_skip_relocation, sequoia:       "da6c618e5cd39d21e37a1d4a4c01ef11ea19d14ac6fea7687ec0386242e3755e"
+  end
+
   depends_on macos: :ventura
 
   def install
