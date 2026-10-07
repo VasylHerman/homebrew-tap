@@ -1,8 +1,8 @@
 class BreakReminder < Formula
   desc "Menu bar app that counts work and rest time and reminds you to take a break"
   homepage "https://github.com/VasylHerman/break-reminder"
-  url "https://github.com/VasylHerman/break-reminder/archive/refs/tags/v0.15.1.tar.gz"
-  sha256 "7711489de316c9b12ce727e03b745244de98e62c66b03914d8e7f59282537da0"
+  url "https://github.com/VasylHerman/break-reminder/archive/refs/tags/v0.16.0.tar.gz"
+  sha256 "420592393cfbd8c3e4826032767e0062da6e6207148235f38d9d71fb5cbc4da8"
   license "MIT"
   head "https://github.com/VasylHerman/break-reminder.git", branch: "main"
 
@@ -24,7 +24,7 @@ class BreakReminder < Formula
 
   service do
     run [opt_prefix/"BreakReminder.app/Contents/MacOS/BreakReminder"]
-    keep_alive true
+    keep_alive successful_exit: false
     process_type :interactive
     log_path var/"log/break-reminder.log"
     error_log_path var/"log/break-reminder.log"
@@ -35,8 +35,9 @@ class BreakReminder < Formula
       Launch it with:
         break-reminder
 
-      To start it at login, either enable "Launch at Login" in the app menu or run:
+      To start it at login and restart it after a crash, run it as a service:
         brew services start break-reminder
+      Or enable "Launch at login" in the app's settings (no crash restart).
 
       To show it in /Applications:
         ln -sf #{opt_prefix}/BreakReminder.app /Applications/BreakReminder.app
