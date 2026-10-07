@@ -1,8 +1,8 @@
 class BreakReminder < Formula
   desc "Menu bar app that counts work and rest time and reminds you to take a break"
   homepage "https://github.com/VasylHerman/break-reminder"
-  url "https://github.com/VasylHerman/break-reminder/archive/refs/tags/v0.4.0.tar.gz"
-  sha256 "428ff22689e37c29e24fb9a9657eee92178aa53fd8ab764f648303e61bfb74b7"
+  url "https://github.com/VasylHerman/break-reminder/archive/refs/tags/v0.5.0.tar.gz"
+  sha256 "e97a7fc262735fc83cd2bcab19e40602cc3dc21a2caa23cd4fe4e87c69e0b251"
   license "MIT"
   head "https://github.com/VasylHerman/break-reminder.git", branch: "main"
 
