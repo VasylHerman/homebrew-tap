@@ -24,7 +24,7 @@ env:
 
 jobs:
   build:
-    if: ${{ github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'fix(formula): bottle') }}
+    if: "${{ github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'fix(formula): bottle') }}"
     strategy:
       fail-fast: false
       matrix:
