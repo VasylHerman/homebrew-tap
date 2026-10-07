@@ -6,7 +6,6 @@ class BreakReminder < Formula
   license "MIT"
   head "https://github.com/VasylHerman/break-reminder.git", branch: "main"
 
-  depends_on :macos
   depends_on macos: :ventura
 
   def install
@@ -46,6 +45,7 @@ class BreakReminder < Formula
 
   test do
     assert_predicate prefix/"BreakReminder.app/Contents/MacOS/BreakReminder", :executable?
-    assert_match "BreakReminder", shell_output("defaults read #{prefix}/BreakReminder.app/Contents/Info.plist CFBundleName")
+    plist = prefix/"BreakReminder.app/Contents/Info.plist"
+    assert_match "BreakReminder", shell_output("defaults read #{plist} CFBundleName")
   end
 end
