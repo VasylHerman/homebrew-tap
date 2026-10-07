@@ -20,7 +20,7 @@ permissions:
   contents: write
 
 env:
-  FORMULA: ${{ inputs.formula || 'break-reminder' }}
+  FORMULA: ${{ github.event.inputs.formula || 'break-reminder' }}
 
 jobs:
   build:
