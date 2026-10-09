@@ -1,17 +1,10 @@
 class BreakReminder < Formula
   desc "Menu bar app that counts work and rest time and reminds you to take a break"
   homepage "https://github.com/VasylHerman/break-reminder"
-  url "https://github.com/VasylHerman/break-reminder/archive/refs/tags/v0.22.1.tar.gz"
-  sha256 "912a02a5d50ad451370d9a9e1c2b5b61be4d59792c6953dafbfff29358f0a158"
+  url "https://github.com/VasylHerman/break-reminder/archive/refs/tags/v0.23.0.tar.gz"
+  sha256 "1551b37314690f9f93beb5f979fdba928f5b05953dac25987ecb62fba3bd0ae6"
   license "MIT"
   head "https://github.com/VasylHerman/break-reminder.git", branch: "main"
-
-  bottle do
-    root_url "https://github.com/VasylHerman/homebrew-tap/releases/download/break-reminder-0.22.1"
-    sha256                               arm64_sequoia: "d9a235b31a7ef6e226802335e9ba2c9981931c1abfd2c925b754adcf2f7344b2"
-    sha256                               arm64_sonoma:  "ddf2f01e0981dd5a666a02b929e484ea27b51fd048a6d3bd20aa4261686c1a26"
-    sha256 cellar: :any_skip_relocation, sequoia:       "efec59ac36dd1139679e917449e74ac4c538693552d1b86b5d94682e577c51cd"
-  end
 
   depends_on macos: :ventura
 
